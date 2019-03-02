@@ -2,6 +2,7 @@
 import pygame,sys,os,random,pickle
 from pathlib import Path
 from shutil import copyfile
+from time import time
 ###################################################IMPORTED LIBRARIES#########################################
 
 
@@ -20,11 +21,13 @@ Colordict = {
     'khaki': 	(240,230,140),
     'DarkKhaki':(189,183,107),
     'DarkGoldenrod':(184,134,11),
+    'Goldenrod':(218,165,32),
     'SaddleBrown':(139,69,19),
     'Sienna':(160,82,45),
     'Peru':(205,133,63),
     'yellowgreen':(154,205,50),
     'yellow':(250,230,0),
+    'gold':(255,215,0),
     'mediumyellow':(250,180,0),
     'orange':(255,165,0),
     'crimson':(220,20,60),
@@ -81,10 +84,10 @@ class food:
     def Make_Food(pos=None,ate=0):
         if ate == 1:
             posw = random.choice(range(fsize, MW_Width - fsize))
-            posh = random.choice(range(80,MW_Height - fsize))
+            posh = random.choice(range(int(MW_Height / 13.5),MW_Height - fsize))
             pos = [posw,posh]
         
-        return pos    
+        return pos
         
     @staticmethod
     def Draw_Food(pos):
@@ -134,16 +137,31 @@ class ChangeSnake:
 
 class Score_Screen:
     @staticmethod
-    def Set_ScoreScreen(score=0):
+    def Set_ScoreScreen(score=0,timeCounter=0):
         SS = pygame.Surface((MW_Width,MW_Height/9))
-        SS.fill(Colordict['lsb'])
+        SS.fill(Colordict['olive'])
         SS = MW.blit(SS,(1,1))
         
+        
+        txtObjHeight = MW_Height/45
+
         txt = 'SCORE:'
+        txtObjIndent1 = MW_Width/4.5
+        txtObjIndent2 = MW_Width/3.2
         scoreTxtObj = New_Txt(txt,'Comic Sans MS',40,'yellow',1,0)
         scoreObj = New_Txt(str(score),'Comic Sans MS',40,'yellow',1,0)
-        MW.blit(scoreTxtObj,(500,20))
-        MW.blit(scoreObj,(675,20))
+        MW.blit(scoreTxtObj,(txtObjIndent1,txtObjHeight))
+        MW.blit(scoreObj,(txtObjIndent2,txtObjHeight))
+
+        
+        txt2 = 'Time:' 
+        time = convertToTime(timeCounter)
+        txtObj2Indent1 = MW_Width/1.6
+        txtObj2Indent2 = MW_Width /1.4
+        scoreTxtObj2 = New_Txt(txt2,'Comic Sans MS',40,'yellow',1,0)
+        scoreObj2 = New_Txt(time,'Comic Sans MS',40,'yellow',1,0)
+        MW.blit(scoreTxtObj2,(txtObj2Indent1,txtObjHeight))
+        MW.blit(scoreObj2,(txtObj2Indent2,txtObjHeight))
 
     @staticmethod
     def Set_Score(score):
@@ -280,6 +298,15 @@ def Check_User(username,password,los=None): #los = login or sign up submit butto
                 Intro_Window()
             elif los == 'l':
                 Set_LoginWindow(userlogin=1,usersignup=0)
+
+
+def convertToTime(seconds):
+    minutes = int(seconds / 60)
+    Seconds = seconds % 60
+    strMinutes = '{:02d}'.format(minutes)
+    strSeconds = '{:02d}'.format(Seconds)
+    strMS = strMinutes + ':' + strSeconds
+    return strMS
 
 
 def Set_LoginWindow(userlogin=0,usersignup=0):
@@ -1244,7 +1271,7 @@ def Set_LoginWindow(userlogin=0,usersignup=0):
 
 
 def Intro_Window():
-    MW.fill(Colordict['SaddleBrown'])
+    MW.fill(Colordict['Sienna'])
 
     #Start Intro Title Txt
     Title_txt = '"LET\'S PLAY SNAKE"'
@@ -1252,7 +1279,7 @@ def Intro_Window():
     if fts <= 30:
         fts = fts+10
     ftype = 'Times New Roman' #fonttype
-    fcolor = 'yellow' #fontcolor
+    fcolor = 'gold' #fontcolor
     T_txtobj = New_Txt(Title_txt,ftype,int(fts),fcolor,1,1) #T_txtobj = Title text object
     MW.blit(T_txtobj,(MW_Width/2.8,MW_Height/5.4))
     #END Intro Title Txt
@@ -1263,7 +1290,7 @@ def Intro_Window():
     if fbs <= 30:
         fbs = fbs+9
     ftype = 'Times New Roman' #fonttype
-    fcolor = 'white' #fontcolor
+    fcolor = 'gold' #fontcolor
     B1TO = New_Txt('Easy',ftype,int(fbs),fcolor,1,0) #Button 1 TextObject
     B2TO = New_Txt('Hard',ftype,int(fbs),fcolor,1,0) #Button 2 TextObject
     B3TO = New_Txt('Quit',ftype,int(fbs),fcolor,1,0) #Button 3 TextObject
@@ -1280,9 +1307,9 @@ def Intro_Window():
     B3 = Rect(B3_Pos)
 
     #Set Buttons
-    B1.New_Button(MW,'yellow',2,txt=B1TO)
-    B2.New_Button(MW,'yellow',1,txt=B2TO)
-    B3.New_Button(MW,'yellow',1,txt=B3TO)
+    B1.New_Button(MW,'DarkGoldenrod',2,txt=B1TO)
+    B2.New_Button(MW,'DarkGoldenrod',1,txt=B2TO)
+    B3.New_Button(MW,'DarkGoldenrod',1,txt=B3TO)
 
     pygame.display.update()
 
@@ -1299,44 +1326,44 @@ def Intro_Window():
                     End_Game()
                 elif event.key == pygame.K_DOWN:
                     if B1.outline == 2:
-                        B1.New_Button(MW,'yellow',1,txt=B1TO)
-                        B2.New_Button(MW,'yellow',2,txt=B2TO)
+                        B1.New_Button(MW,'DarkGoldenrod',1,txt=B1TO)
+                        B2.New_Button(MW,'DarkGoldenrod',2,txt=B2TO)
                     elif B2.outline == 2:                    
-                        B2.New_Button(MW,'yellow',1,txt=B2TO)
-                        B3.New_Button(MW,'yellow',2,txt=B3TO)
+                        B2.New_Button(MW,'DarkGoldenrod',1,txt=B2TO)
+                        B3.New_Button(MW,'DarkGoldenrod',2,txt=B3TO)
                     elif B3.outline == 2:
-                        B1.New_Button(MW,'yellow',2,txt=B1TO)
-                        B3.New_Button(MW,'yellow',1,txt=B3TO)
+                        B1.New_Button(MW,'DarkGoldenrod',2,txt=B1TO)
+                        B3.New_Button(MW,'DarkGoldenrod',1,txt=B3TO)
                 elif event.key == pygame.K_UP: 
                     if B1.outline == 2:
-                        B1.New_Button(MW,'yellow',1,txt=B1TO)
-                        B3.New_Button(MW,'yellow',2,txt=B3TO)
+                        B1.New_Button(MW,'DarkGoldenrod',1,txt=B1TO)
+                        B3.New_Button(MW,'DarkGoldenrod',2,txt=B3TO)
                     elif B2.outline == 2:
-                        B1.New_Button(MW,'yellow',2,txt=B1TO)
-                        B2.New_Button(MW,'yellow',1,txt=B2TO)
+                        B1.New_Button(MW,'DarkGoldenrod',2,txt=B1TO)
+                        B2.New_Button(MW,'DarkGoldenrod',1,txt=B2TO)
                     elif B3.outline == 2:
-                        B2.New_Button(MW,'yellow',2,txt=B2TO)
-                        B3.New_Button(MW,'yellow',1,txt=B3TO)
+                        B2.New_Button(MW,'DarkGoldenrod',2,txt=B2TO)
+                        B3.New_Button(MW,'DarkGoldenrod',1,txt=B3TO)
             elif event.type == pygame.MOUSEMOTION:
                 B1MT = B1.rect.collidepoint(pygame.mouse.get_pos()) #B1MT = Button 1 Mouse Test
                 B2MT = B2.rect.collidepoint(pygame.mouse.get_pos()) #B2MT = Button 2 Mouse Test
                 B3MT = B3.rect.collidepoint(pygame.mouse.get_pos()) #B2MT = Button 3 Mouse Test
                 if B1MT == 1:
-                    B1.New_Button(MW,'orange',txt=B1TO)
-                    B2.New_Button(MW,'yellow',txt=B2TO)
-                    B3.New_Button(MW,'yellow',txt=B3TO)
+                    B1.New_Button(MW,'DarkKhaki',txt=B1TO)
+                    B2.New_Button(MW,'DarkGoldenrod',txt=B2TO)
+                    B3.New_Button(MW,'DarkGoldenrod',txt=B3TO)
                 elif B2MT ==1:
-                    B1.New_Button(MW,'yellow',txt=B1TO)
-                    B2.New_Button(MW,'orange',txt=B2TO)
-                    B3.New_Button(MW,'yellow',txt=B3TO)
+                    B1.New_Button(MW,'DarkGoldenrod',txt=B1TO)
+                    B2.New_Button(MW,'DarkKhaki',txt=B2TO)
+                    B3.New_Button(MW,'DarkGoldenrod',txt=B3TO)
                 elif B3MT ==1:
-                    B1.New_Button(MW,'yellow',txt=B1TO)
-                    B2.New_Button(MW,'yellow',txt=B2TO)
-                    B3.New_Button(MW,'orange',txt=B3TO)
+                    B1.New_Button(MW,'DarkGoldenrod',txt=B1TO)
+                    B2.New_Button(MW,'DarkGoldenrod',txt=B2TO)
+                    B3.New_Button(MW,'DarkKhaki',txt=B3TO)
                 else:
-                    B1.New_Button(MW,'yellow',txt=B1TO)
-                    B2.New_Button(MW,'yellow',txt=B2TO)
-                    B3.New_Button(MW,'yellow',txt=B3TO)
+                    B1.New_Button(MW,'DarkGoldenrod',txt=B1TO)
+                    B2.New_Button(MW,'DarkGoldenrod',txt=B2TO)
+                    B3.New_Button(MW,'DarkGoldenrod',txt=B3TO)
         pygame.display.update()            
 
 
@@ -1378,13 +1405,14 @@ def Play_Snake():
     foodpos = food.Make_Food(ate=1) #Randomize food starting position
     score = 0 #Start set score to 0
     fps = pygame.time.Clock() #Create fps clock
-
+    now = time()
+    timeCounter = 1
 
     #Start Main Game Loop
     while True:
         fps.tick(40)
         MW.fill(Colordict['SaddleBrown'])
-        Score_Screen.Set_ScoreScreen(score)
+        Score_Screen.Set_ScoreScreen(score,timeCounter)
         snake.Draw_Snake(SP)
         food.Draw_Food(foodpos)
         foodpos, SP, score = ChangeSnake.Ate_Food(SP,foodpos,dir,score)
@@ -1392,6 +1420,9 @@ def Play_Snake():
         pygame.display.update()
         cdir = dir
         dir, SP = snake.Move_Snake(SP,dir,cdir)
+
+        if time() >= now + timeCounter:
+            timeCounter += 1
         
 
         for event in pygame.event.get():
