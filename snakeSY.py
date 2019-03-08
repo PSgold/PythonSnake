@@ -38,6 +38,7 @@ Resolution = (MW_Width,MW_Height)
 MW = pygame.display.set_mode(Resolution,pygame.FULLSCREEN)
 
 ssize = 10 #snake size based on radius
+sizeB2cc = 6 #size between 2 circle centers
 fsize = ssize - 2 #food size based on radius 
 
 ##################################################GLOBAL VARIABLES############################################
@@ -74,7 +75,7 @@ class snake:
             SP.insert(0,SPH)
             SP.pop(-1)
         else:
-            End_Game()
+            End_Game() #End game when you move turn in the opposite direction the snake is moving
             
         return dir, SP
 
@@ -84,7 +85,7 @@ class food:
     def Make_Food(pos=None,ate=0):
         if ate == 1:
             posw = random.choice(range(fsize, MW_Width - fsize))
-            posh = random.choice(range(int(MW_Height / 13.5),MW_Height - fsize))
+            posh = random.choice(range(int(MW_Height / 8.3),MW_Height - fsize))
             pos = [posw,posh]
         
         return pos
@@ -109,30 +110,70 @@ class ChangeSnake:
     @staticmethod
     def Add_ToSnake(SP,dir):
         if dir == 'Right':
-            SPH = [SP[0][0]+ssize,SP[0][1]]
+            SPH = [SP[0][0]+sizeB2cc,SP[0][1]]
+            SP.insert(0,SPH)
             SP.insert(0,SPH)
         if dir == 'Left':
-            SPH = [SP[0][0]-ssize,SP[0][1]]
+            SPH = [SP[0][0]-sizeB2cc,SP[0][1]]
+            SP.insert(0,SPH)
             SP.insert(0,SPH)
         if dir == 'Up':
-            SPH = [SP[0][0],SP[0][1]-ssize]
+            SPH = [SP[0][0],SP[0][1]-sizeB2cc]
+            SP.insert(0,SPH)
             SP.insert(0,SPH)
         if dir == 'Down':
-            SPH = [SP[0][0],SP[0][1]+ssize]
+            SPH = [SP[0][0],SP[0][1]+sizeB2cc]
             SP.insert(0,SPH)
+            SP.insert(0,SPH)
+        
+        '''
+        #Adds on to back of snake
+        if dir == 'Right':
+            SPH = [SP[-1][0]-sizeB2cc,SP[-1][1]]
+            SP.insert(-1,SPH)
+            SP.insert(-1,SPH)
+        if dir == 'Left':
+            SPH = [SP[-1][0]+sizeB2cc,SP[-1][1]]
+            SP.insert(-1,SPH)
+            SP.insert(-1,SPH)
+        if dir == 'Up':
+            SPH = [SP[-1][0],SP[-1][1]+sizeB2cc]
+            SP.insert(-1,SPH)
+            SP.insert(-1,SPH)
+        if dir == 'Down':
+            SPH = [SP[-1][0],SP[-1][1]-sizeB2cc]
+            SP.insert(-1,SPH)
+            SP.insert(-1,SPH)    
+        '''
         return SP
 
 
     @staticmethod
-    def Test_WallCollision(SP):
-        if SP[0][0] <= (ssize-1):
+    def Test_Collision(SP):
+        if SP[0][0] <= (sizeB2cc):
             End_Game()
-        elif SP[0][0] >= (MW_Width-ssize-2):
+        elif SP[0][0] >= (MW_Width-sizeB2cc):
             End_Game()
         elif SP[0][1] <= MW_Height/8.85:
             End_Game()
-        elif SP[0][1] >= MW_Height:
+        elif SP[0][1] >= MW_Height-sizeB2cc:
             End_Game()
+        
+        #print(SP)
+        snakeHeadPos = [SP[0][0],SP[0][1]]
+        count = 1
+        for S in SP:
+            if count < 4:
+                pass
+            else:
+                if (abs(S[0] - snakeHeadPos[0]) <= sizeB2cc and abs(S[1] - snakeHeadPos[1]) <= sizeB2cc):
+                    '''
+                    print(S)
+                    print (SP[0])
+                    print (SP)
+                    '''
+                    End_Game()
+            count += 1
 
 
 class Score_Screen:
@@ -241,7 +282,7 @@ def End_Game():
 
 
 def Check_User(username,password,los=None): #los = login or sign up submit button pressed
-    adddict = {'username':username,'password':password}
+    adddict = {'username':username,'password':password,'Hscore':0}
     cwd = os.path.dirname(os.path.realpath(__file__))
     if sys.platform == 'win32':
         pfile_path = cwd + '\\data.pickle'
@@ -1374,20 +1415,20 @@ def Play_Snake():
 
     #Start snake start position
     PH = [274,200]
-    P1 = [268,200]
-    P2 = [262,200]
-    P3 = [256,200]
-    P4 = [250,200]
-    P5 = [244,200]
-    P6 = [238,200]
-    P7 = [232,200]
-    P8 = [226,200]
-    P9 = [220,200]
-    P10 = [214,200]
-    P11 = [208,200]
-    P12 = [202,200]
-    P13 = [196,200]
-    P14 = [190,200]
+    P1 = [PH[0]-sizeB2cc,200]
+    P2 = [P1[0]-sizeB2cc,200]
+    P3 = [P2[0]-sizeB2cc,200]
+    P4 = [P3[0]-sizeB2cc,200]
+    P5 = [P4[0]-sizeB2cc,200]
+    P6 = [P5[0]-sizeB2cc,200]
+    P7 = [P6[0]-sizeB2cc,200]
+    P8 = [P7[0]-sizeB2cc,200]
+    P9 = [P8[0]-sizeB2cc,200]
+    P10 = [P9[0]-sizeB2cc,200]
+    P11 = [P10[0]-sizeB2cc,200]
+    P12 = [P11[0]-sizeB2cc,200]
+    P13 = [P12[0]-sizeB2cc,200]
+    P14 = [P13[0]-sizeB2cc,200]
 
     SP = [PH,P1,P2,P3,P4,P5,P6,P7,P8,P9,P10,P11,P12,P13,P14]
     dir = 'Right'
@@ -1416,7 +1457,7 @@ def Play_Snake():
         snake.Draw_Snake(SP)
         food.Draw_Food(foodpos)
         foodpos, SP, score = ChangeSnake.Ate_Food(SP,foodpos,dir,score)
-        ChangeSnake.Test_WallCollision(SP)
+        ChangeSnake.Test_Collision(SP)
         pygame.display.update()
         cdir = dir
         dir, SP = snake.Move_Snake(SP,dir,cdir)
