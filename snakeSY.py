@@ -33,12 +33,13 @@ Colordict = {
     'crimson':(220,20,60),
     'red':(255,0,0)
 }
+cwd = os.path.dirname(os.path.realpath(__file__))
 MW_Width, MW_Height = 1920, 1080
 Resolution = (MW_Width,MW_Height)
 MW = pygame.display.set_mode(Resolution,pygame.FULLSCREEN)
 
 ssize = 10 #snake size based on radius
-sizeB2cc = 6 #size between 2 circle centers
+sizeB2cc = 6 #size between 2 circle centers of snake
 fsize = ssize - 2 #food size based on radius 
 
 ##################################################GLOBAL VARIABLES############################################
@@ -283,7 +284,7 @@ def End_Game():
 
 def Check_User(username,password,los=None): #los = login or sign up submit button pressed
     adddict = {'username':username,'password':password,'Hscore':0}
-    cwd = os.path.dirname(os.path.realpath(__file__))
+    
     if sys.platform == 'win32':
         pfile_path = cwd + '\\data.pickle'
         pfile_path = pfile_path.replace('\\','/')
@@ -291,13 +292,14 @@ def Check_User(username,password,los=None): #los = login or sign up submit butto
         dfile_path = dfile_path.replace('\\','/')    
     else:
         pfile_path = cwd + '/data.pickle'
-        dfile_path = cwd + '\\default.pickle'
+        dfile_path = cwd + '/default.pickle'
     
-    pfile_path = Path(pfile_path)
-    dfile_path = Path(dfile_path)
+    pfile_path = str(Path(pfile_path))
+    dfile_path = str(Path(dfile_path))
 
+    pfile_path0 = Path(pfile_path) #variable that keeps Path posix and doesn't turn it to string
 
-    if pfile_path.is_file():
+    if pfile_path0.is_file():
         pdatafile = open(pfile_path,'rb')
         pdata = pickle.load(pdatafile)
         pdatafile.close()
@@ -1436,7 +1438,7 @@ def Play_Snake():
 
 
     #Start load music file
-    music = 'D:/Music/NoLyrics/Scott_HolmesHappyEnding.mp3'
+    music = cwd + '/Scott_HolmesHappyEnding.mp3'
     pygame.mixer.init()
     pygame.mixer.music.load(music)
     pygame.mixer.music.play(-1)
